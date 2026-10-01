@@ -8,8 +8,40 @@ let formulier = document.getElementById('task-form');
 let input = document.getElementById('task-input');
 let taken = document.getElementById('tasks');
 
-input.addEventListener('click', () => {
-    formulier.addEventListener('submit', (e) => {
-        e.preventDefault();
+function taakToevoegen() {
+    let li = document.createElement('li');
+    li.textContent = input.value;
+
+    let checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    li.appendChild(checkbox);
+    checkbox.addEventListener('change', () => {
+    li.classList.toggle('afgevinkt');
     });
+
+    let verwijderKnop = document.createElement('button');
+    verwijderKnop.textContent = 'Verwijderen';
+    li.appendChild(verwijderKnop);
+    verwijderKnop.addEventListener('click', () => {
+    li.remove();
+    toonTaken();
+    });
+
+    taken.appendChild(li);
+
+    input.value = '';
+}
+
+function toonTaken() {
+    let aantalTaken = taken.getElementsByTagName('li').length;
+    takenLijst.textContent = aantalTaken;
+
+}
+
+toonTaken();
+
+formulier.addEventListener('submit', (e) => {
+    e.preventDefault();
+    taakToevoegen();
+    toonTaken();
 });
