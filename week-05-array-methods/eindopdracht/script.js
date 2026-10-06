@@ -16,29 +16,54 @@ const products = [
 let searchTerm = '';
 let sorting = '';
 
-const showProducts = (products) => {
-  // Toon elk product als een <article> in #products
-  // Laat in #counter de hoeveelheid producten zien
+const searchBar = document.querySelector('#search-bar');
+const sortLowButton = document.querySelector('#sort-low');
+const sortHighButton = document.querySelector('#sort-high');
+const counter = document.querySelector('#counter');
+const productsContainer = document.querySelector('#products');
+
+const showProducts = (list) => {
+  productsContainer.innerHTML = '';
+
+  list.forEach((product) => {
+    const article = document.createElement('article');
+    article.innerHTML = `
+      <h3>${product.name}</h3>
+      <p>${product.price}</p>
+    `;
+    productsContainer.appendChild(article);
+  });
+
+  counter.textContent = list.length;
 };
 
 const filterProducts = () => {
-  // Maak een variabele 'filtered' aan door de products array te filteren op searchTerm
-  // Gebruik hiervoor filter() en includes() en toLowerCase()
+  let filtered = products.filter((product) => {
+    return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+  }); 
 
-  // Filter hier op sorting:
-  // als sorting 'low' is, sorteer van laag naar hoog op prijs
-  // als sorting 'high' is, sorteer van hoog naar laag op prijs
+  if (sorting === 'low') {
+    filtered.sort((a, b) => a.price - b.price);
+  } else if (sorting === 'high') {
+    filtered.sort((a, b) => b.price - a.price);
+  }
 
   showProducts(filtered);
 };
 
-// Maak een eventlistener voor de #search-bar input
-// Sla de waarde op in de searchTerm variabele en roep filterProducts() aan
+searchBar.addEventListener('input', (e) => {
+  searchTerm = e.target.value;
+  filterProducts();
+});
 
-// Maak een eventlistener voor de #sort-low button
-// Zet sorting op 'low' en roep filterProducts() aan
+sortLowButton.addEventListener('click', () => {
+  sorting = 'low';
+  filterProducts();
+});
 
-// Maak een eventlistener voor de #sort-high button
-// Zet sorting op 'high' en roep filterProducts() aan
+sortHighButton.addEventListener('click', () => {
+  sorting = 'high';
+  filterProducts();
+});
 
 filterProducts();
