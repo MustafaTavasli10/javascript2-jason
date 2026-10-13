@@ -1,5 +1,7 @@
-const origineel = document.getElementById(origineel);
-const kopie = document.getElementById(kopie);
+const origineel = document.getElementById('origineel');
+const kopie = document.getElementById('kopie');
+
+
 
 const people = [
   { name: 'Lisa', age: 28, city: 'Amsterdam' },
@@ -9,9 +11,10 @@ const people = [
 
 
 
-// 1. Toon in #origineel de originele lijst met alleen namen en steden.
-//    Gebruik destructuring in je .map().
-// 2. Maak met .map() en de spread operator een nieuwe array waarin
-//    de stad van elke persoon is gewijzigd naar 'Den Haag'.
-//    De originele people-array moet onveranderd blijven.
-// 3. Toon deze nieuwe lijst in #kopie, ook met destructuring.
+const origineleLijst = people.map(({ name, city }) => `<p>${name} - ${city}</p>`).join('');
+origineel.innerHTML += origineleLijst;
+
+const nieuweLijst = people.map(person => ({ ...person, city: 'Den Haag' }));
+
+const kopieLijst = nieuweLijst.map(({ name, city }) => `<p>${name} - ${city}</p>`).join('');
+kopie.innerHTML += kopieLijst;
