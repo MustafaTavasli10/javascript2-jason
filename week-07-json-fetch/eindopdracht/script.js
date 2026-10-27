@@ -1,26 +1,39 @@
 let allArticles = [];
 
 const showArticles = (articles) => {
-  // Zet elk artikel om naar een <article> met map() en toon het in #articles
-  // Toon de title, category en summary van elk artikel
+  const articlesContainer = document.getElementById('articles');
+  articlesContainer.innerHTML = articles.map(article => `
+    <article>
+    <h2>${article.title}</h2>
+    <p><strong>Categorie:</strong>${article.category}</p>
+    <p>${article.summary}</p>
+    </article>
+    `).join('');
 };
 
 fetch('./news.json')
   .then(r => r.json())
   .then(articles => {
-    // Sla de artikelen op in allArticles
-    // Roep showArticles() aan met allArticles
+    allArticles = articles;
+    showArticles(allArticles);
   })
   .catch(error => console.error('Fout bij laden:', error));
 
-// Maak een eventlistener voor de #filter-alle button
-// Roep showArticles() aan met allArticles
+document.getElementById('filter-alle').addEventListener('click', () => {
+  showArticles(allArticles);
+});
 
-// Maak een eventlistener voor de #filter-stad button
-// Filter allArticles op category 'Stad' en roep showArticles() aan
+document.getElementById('filter-stad').addEventListener('click', () => {
+  const filtered = allArticles.filter(article => article.category === 'stad');
+  showArticles(filtered);
+});
 
-// Maak een eventlistener voor de #filter-technologie button
-// Filter allArticles op category 'Technologie' en roep showArticles() aan
+document.getElementById('filter-technologie').addEventListener('click', () => {
+  const filtered = allArticles.filter(article => article.category === 'Technologie');
+  showArticles(filtered);
+});
 
-// Maak een eventlistener voor de #filter-media button
-// Filter allArticles op category 'Media' en roep showArticles() aan
+document.getElementById('filter-media').addEventListener('click', () => {
+  const filtered = allArticles.filter(article => article.category === 'Media');
+  showArticles(filtered);
+});
