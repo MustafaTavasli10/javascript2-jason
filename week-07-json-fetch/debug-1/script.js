@@ -1,7 +1,7 @@
-// Fout gevonden: _______________
-// Oplossing: _______________
+// Fout gevonden: ./new.json is fout
+// Oplossing: Het moet ./news.json zijn
 
-fetch('./new.json')
+fetch('./news.json')
   .then(r => r.json())
   .then(messages => {
     const list = document.querySelector('#results');
