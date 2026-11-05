@@ -1,21 +1,57 @@
-// API_KEY wordt geladen vanuit config.js (zie config.example.js voor instructies)
+
+const searchForm = document.querySelector('#search-form');
+const cityInput = document.querySelector('#city-input');
+const weatherInfo = document.querySelector('#weather-info');
+
 
 const showWeather = (data) => {
-  // Zet de weerinformatie van data om naar HTML in #weather-info
-  // Toon: stadsnaam, weer-icon, temperatuur, gevoelstemperatuur, luchtvochtigheid en windsnelheid
-  // Rond de temperaturen af met Math.round()
-  // Gebruik console.log(data) om de structuur te bekijken
-  // De icon-URL is: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
+  if (data.cod !== 200) {
+    weatherInfo.innerHTML = `<p> class="error">Stad niet gevonden. Probeer het opnieuw.</p>`;
+    return;
+  }
+
+  const cityName = data.name;
+  const temp = Math.round(data.main.temp);
+  const feelsLike = Math.round(data.main.feels_like);
+  const humidity = data.main.humidity;
+  const windSpeed = data.wind.speed;
+  const icon = data.weather[0].icon;
+
+  const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
+
+  weatherInfo.innerHTML = `
+  <h2>${cityName}</h2>
+  <img src="${iconUrl}" alt="Weer icon">
+  <p><strong>Temperatuur:</strong> ${temp} °C</p>
+  <p><strong>Gevoelstemperatuur:</strong> ${feelsLike} °C</p>
+  <p><strong>Luchtvochtigheid:</strong> ${humidity}%</p>
+  <p><strong>Windsnelheid:</strong> ${windSpeed} m/s</p>
+  `;
+
 };
+
 
 const getWeather = (city) => {
-  // Doe een fetch naar de OpenWeather API met city en API_KEY
-  // De URL is: `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
-  // Gebruik console.log(data) om de structuur te bekijken
-  // Roep showWeather(data) aan met de response
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    showWeather(data);
+  })
+  .catch(error => {
+    console.error('Fout bij het ophalen:', error);
+  });
 };
 
-// Voeg hier een submit event listener toe aan #search-form
-// Gebruik e.preventDefault() zodat de pagina niet herlaadt
-// Lees de waarde uit #city-input en roep getWeather(city) aan
-// Maak de input daarna leeg
+searchForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const city = cityInput.value.trim();
+
+  if (city !== '') {
+    getWeather(city);
+    cityInput.value = '';
+  }
+});
