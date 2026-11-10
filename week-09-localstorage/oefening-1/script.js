@@ -13,5 +13,7 @@ button.addEventListener('click', () => {
 })
 
 button2.addEventListener('click', () => {
-    let getItem = localStorage.getItem('input value');
+    let getItem = output.value.trim();
+    localStorage.getItem('output value', getItem)
 })
+
